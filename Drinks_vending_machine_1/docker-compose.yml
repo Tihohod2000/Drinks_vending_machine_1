@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+#    volumes:
+#      - ${PWD:-./Drinks_vending_machine_1/}:/app
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=drinks;Username=user;Password=password
+    
+  db:
+      image: postgres:16-alpine
+      volumes:
+        - /var/onpoint/connector:/var/lib/postgresql/data
+      environment:
+        - POSTGRES_USER=user
+        - POSTGRES_PASSWORD=password
+        - POSTGRES_DB=drinks
+      ports:
+        - 15481:5432

@@ -11,6 +11,7 @@ services:
 #      - ${PWD:-./Drinks_vending_machine_1/}:/app
     depends_on:
       - db
+#    command: sh -c "npm run migrate && npm start"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=drinks;Username=user;Password=password

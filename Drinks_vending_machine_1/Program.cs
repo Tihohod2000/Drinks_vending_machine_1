@@ -32,4 +32,10 @@ app.MapControllerRoute(
 app.MapFallbackToFile("index.html");
 ;
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.Migrate(); // Применяет все pending миграции
+}
+
 app.Run();

@@ -56,7 +56,7 @@ export class Home extends Component {
             this.props.addToMyState(product);
             console.log(this.props)
 
-            alert(`Товар "${product.brand.name}" добавлен в корзину!`);
+            // alert(`Товар "${product.brand.name}" добавлен в корзину!`);
         } catch (error) {
             console.error('Ошибка при добавлении в корзину:', error);
             alert('Не удалось добавить товар в корзину.');

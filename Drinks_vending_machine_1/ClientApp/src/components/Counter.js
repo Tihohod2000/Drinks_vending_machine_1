@@ -38,7 +38,8 @@ export class Counter extends Component {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ ids: this.props.MyState }),
+                body: JSON.stringify({ ids: this.props.MyState.map(item => item.id) }),
+
             });
 
             if (!response.ok) {
@@ -62,7 +63,10 @@ export class Counter extends Component {
     
 
     render() {
-        const { myStateProducts, isLoading, error } = this.state;
+        const { MyState, isLoading, error } = this.props;
+
+        const total = MyState.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
 
         if (isLoading) {
             return <div>Загрузка...</div>;
@@ -76,13 +80,9 @@ export class Counter extends Component {
             <div>
                 <h2>Моя корзина</h2>
 
-                {myStateProducts.length > 0 ? (
-                    <div style={{
-                        // display: 'grid',
-                        // gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-                        // gap: '20px'
-                    }}>
-                        {myStateProducts.map(product => (
+                {MyState.length > 0 ? (
+                    <div style={{ margin: '10px' }}>
+                        {MyState.map(product => (
                             <div
                                 key={product.id}
                                 style={{
@@ -94,23 +94,87 @@ export class Counter extends Component {
                                 }}
                             >
                                 <h3>{product.info || 'Без названия'}</h3>
-                                {product.brand && <p>Бренд: {product.brand.name}</p>}
+                                <p>Бренд: {product.brand}</p>
                                 <p>Цена: {product.price} ₽</p>
-                                <button
-                                    onClick={() => this.props.removeFromMyState(product.id)}
-                                    style={{
-                                        padding: '8px 16px',
-                                        backgroundColor: '#ff4444',
-                                        color: 'white',
-                                        border: 'none',
-                                        borderRadius: '4px',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    Удалить
-                                </button>
+                                <p>Количество: {product.quantity}</p>
+                                <div style={{ display: 'flex', gap: '10px' }}>
+                                    <button
+                                        onClick={() => this.props.addToMyState(product)}
+                                        style={{
+                                            padding: '8px 16px',
+                                            backgroundColor: '#4CAF50',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        +
+                                    </button>
+                                    <button
+                                        onClick={() => this.props.removeItemFromMyState(product.id)}
+                                        style={{
+                                            padding: '8px 16px',
+                                            backgroundColor: '#f39c12',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        -
+                                    </button>
+                                    <button
+                                        onClick={() => this.props.removeFromMyState(product.id)}
+                                        style={{
+                                            padding: '8px 16px',
+                                            backgroundColor: '#ff4444',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        Удалить
+                                    </button>
+                                </div>
                             </div>
                         ))}
+                        <button
+                            onClick={this.props.clearMyState}
+                            style={{
+                                padding: '10px 20px',
+                                backgroundColor: '#ff4444',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                marginTop: '20px'
+                            }}
+                        >
+                            Очистить корзину
+                        </button>
+                        <div>
+                            <div>
+                                Общая сумма:
+                            </div>
+                            <div>
+                                {MyState.reduce((sum, item) => sum + item.price * item.quantity, 0)} ₽
+                            </div>
+                            <button
+                                // onClick={this.props.clearMyState}
+                                style={{
+                                    padding: '8px 16px',
+                                    backgroundColor: '#4CAF50',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                Оплатить
+                            </button>
+                        </div>
                     </div>
                 ) : (
                     <p>Ваша корзина пуста</p>

@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Drinks_vending_machine_1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250417103111_InitialCreate")]
+    [Migration("20250418105248_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -160,12 +160,19 @@ namespace Drinks_vending_machine_1.Migrations
                         {
                             Id = 2,
                             BrandId = 2,
-                            Info = "Газированный напиток",
+                            Info = "Газированный напиток 0,5л",
                             Price = 125m
                         },
                         new
                         {
                             Id = 3,
+                            BrandId = 2,
+                            Info = "Газированный напиток 1,0л",
+                            Price = 225m
+                        },
+                        new
+                        {
+                            Id = 4,
                             BrandId = 3,
                             Info = "Газированный напиток",
                             Price = 115m

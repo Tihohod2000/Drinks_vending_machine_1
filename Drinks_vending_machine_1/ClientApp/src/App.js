@@ -13,15 +13,78 @@ export default class App extends Component {
     };
 
     // Метод для обновления состояния
-    addToMyState = (item) => {
-        this.setState(prevState => ({
-            MyState: [...prevState.MyState, item]
-        }));
+    // Добавление товара в корзину
+    addToMyState = (product) => {
+        this.setState(prevState => {
+            // Проверяем, есть ли товар уже в корзине
+            const existingItemIndex = prevState.MyState.findIndex(
+                item => item.id === product.id
+            );
+
+            console.log("11");
+            console.log(this.state);
+            console.log("11");
+            if (existingItemIndex >= 0) {
+                // Если товар уже есть - увеличиваем количество
+                const updatedItems = [...prevState.MyState];
+                updatedItems[existingItemIndex] = {
+                    ...updatedItems[existingItemIndex],
+                    quantity: updatedItems[existingItemIndex].quantity + 1
+                };
+                return { MyState: updatedItems };
+            } else {
+                // Если товара нет - добавляем новый
+                return {
+                    MyState: [
+                        ...prevState.MyState,
+                        {
+                            id: product.id,
+                            name: product.name,
+                            info: product.info,
+                            price: product.price,
+                            brand: product.brand.name,
+                            quantity: 1
+                        }
+                    ]
+                };
+            }
+        });
+    };
+
+    removeItemFromMyState = (itemId) => {
+        this.setState(prevState => {
+            // Находим индекс элемента в корзине
+            const existingItemIndex = prevState.MyState.findIndex(
+                item => item.id === itemId  // Исправлено: используем itemId вместо product.id
+            );
+
+            if (existingItemIndex >= 0) {  
+                const item = prevState.MyState[existingItemIndex];
+
+                
+                if (item.quantity > 1) {
+                    const updatedItems = [...prevState.MyState];
+                    updatedItems[existingItemIndex] = {
+                        ...item,
+                        quantity: item.quantity - 1
+                    };
+                    return { MyState: updatedItems };
+                }
+                
+                else{
+                    return {
+                        MyState: prevState.MyState.filter(item => item.id !== itemId)
+                    };
+                }
+            }
+            
+            return prevState;
+        });
     };
     
     removeFromMyState = (itemId) => {
         this.setState(prevState => ({
-            MyState: prevState.MyState.filter(id => id !== itemId)
+            MyState: prevState.MyState.filter(item => item.id !== itemId)
         }));
     };
 
@@ -42,7 +105,8 @@ export default class App extends Component {
                 MyState: this.state.MyState,
                 addToMyState: this.addToMyState,
                 removeFromMyState: this.removeFromMyState,
-                clearMyState: this.clearMyState
+                clearMyState: this.clearMyState,
+                removeItemFromMyState: this.removeItemFromMyState
             })} />;
           })}
         </Routes>

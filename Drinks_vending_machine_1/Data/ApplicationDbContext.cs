@@ -71,8 +71,9 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Product>().HasData(
             new Product { Id = 1, Info = "Газированный напиток", BrandId = 1, Price = 120 },
-            new Product { Id = 2, Info = "Газированный напиток", BrandId = 2, Price = 125 },
-            new Product { Id = 3, Info = "Газированный напиток", BrandId = 3, Price = 115 }
+            new Product { Id = 2, Info = "Газированный напиток 0,5л", BrandId = 2, Price = 125 },
+            new Product { Id = 3, Info = "Газированный напиток 1,0л", BrandId = 2, Price = 225 },
+            new Product { Id = 4, Info = "Газированный напиток", BrandId = 3, Price = 115 }
         );
         
         modelBuilder.Entity<Coin>().HasData(

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import {Link} from "react-router-dom";
+import {NavItem, NavLink} from "reactstrap";
 
 export class Home extends Component {
   static displayName = Home.name;
@@ -30,17 +32,17 @@ export class Home extends Component {
 
     handleAddToCart = async (product) => {
         try {
-            const response = await fetch('http://localhost:8080/api/basket/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ productId: product.id }) // можно передать только id, если API ожидает его
-            });
+            // const response = await fetch('http://localhost:8080/api/basket/add', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            //     body: JSON.stringify({ productId: product.id, }) // можно передать только id, если API ожидает его
+            // });
 
-            if (!response.ok) {
-                throw new Error(`Failed to add to cart: ${response.status}`);
-            }
+            // if (!response.ok) {
+            //     throw new Error(`Failed to add to cart: ${response.status}`);
+            // }
 
             // const result = await response.json();
             // console.log('Added to cart:', result);
@@ -51,7 +53,7 @@ export class Home extends Component {
 
             // console.log(this.props)
             // this.props["MyState"].push(product.id)
-            this.props.addToMyState(product.id);
+            this.props.addToMyState(product);
             console.log(this.props)
 
             alert(`Товар "${product.brand.name}" добавлен в корзину!`);
@@ -71,6 +73,14 @@ export class Home extends Component {
         return (
             <div className="p-4">
                 <h1>Vending Machine Products</h1>
+                <NavLink
+                    tag={Link}
+                    className={`btn btn-primary ${this.props.MyState.length <= 0 ? 'disabled' : ''}`}
+                    to="/counter"
+                    aria-disabled={this.props.MyState.length <= 0}
+                >
+                    Добавлено: {this.props.MyState.length}
+                </NavLink>
                 <div className="mt-3">
                     {products.length > 0 ? (
                         <div style={{
@@ -79,7 +89,8 @@ export class Home extends Component {
                             gap: '20px'
                         }}>
                             {products.map(product => {
-                                const isAdded = this.props.MyState.includes(product.id);
+                                const isAdded = this.props.MyState.some(item => item.id === product.id);
+
 
                                 return (
                                     <div key={product.id} style={{
@@ -90,7 +101,7 @@ export class Home extends Component {
                                     }}>
                                         <p>{product.info || 'No info'}</p>
                                         <p>{product.brand.name}</p>
-                                        <p>Цена: {product.price} Р.</p>
+                                        <p>Цена: {product.price} ₽.</p>
                                         <button
                                             style={{
                                                 border: '1px solid #ddd',

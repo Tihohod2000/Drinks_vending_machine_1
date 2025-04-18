@@ -56,8 +56,7 @@ export class Pay extends Component {
 
         const change = this.calculateChange(totalAmountUserHas, totalAmount);
 
-        const canGive = this.props.canGiveChange(change, products, coinInputValues);
-
+        const { canGive, changeGiven } = this.props.canGiveChange(change, products, coinInputValues);
 
         return (
             <div className="p-4">
@@ -117,9 +116,13 @@ export class Pay extends Component {
                 <div style={{marginTop: '10px', fontWeight: 'bold'}}>
                     {change > 0 && (
                         canGive
-                            ? <span style={{color: 'green'}}>Автомат может выдать сдачу</span>
-                            : <span style={{color: 'red'}}>Автомат не может выдать сдачу</span>
-                    )}
+                            ?   <div>
+                                    <span style={{color: 'green'}}>Автомат может выдать сдачу</span>
+                                </div>
+                            : <div>
+                                <span style={{color: 'red'}}>Автомат не может выдать сдачу</span>
+                                </div>
+                                )}
                 </div>
                 <div>
                     Ваша сдача: {change}

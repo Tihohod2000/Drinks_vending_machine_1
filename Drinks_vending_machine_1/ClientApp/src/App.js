@@ -109,7 +109,6 @@ export default class App extends Component {
 
 
     canGiveChange(change, products, coinInputValues) {
-        // Копируем и дополняем монеты внесенными пользователем
         const coins = products.map(coin => {
             const userAmount = parseInt(coinInputValues?.[coin.id] || 0, 10);
             return {
@@ -122,16 +121,28 @@ export default class App extends Component {
         coins.sort((a, b) => b.price - a.price);
 
         let remaining = change;
+        const changeGiven = [];  // сюда будем складывать выданные монеты
 
         for (const coin of coins) {
             const needed = Math.floor(remaining / coin.price);
             const used = Math.min(needed, coin.count);
-            remaining -= used * coin.price;
+
+            if (used > 0) {
+                changeGiven.push({
+                    id: coin.id,
+                    price: coin.price,
+                    count: used
+                });
+                remaining -= used * coin.price;
+            }
 
             if (remaining === 0) break;
         }
 
-        return remaining === 0;
+        return {
+            canGive: remaining === 0,
+            changeGiven: remaining === 0 ? changeGiven : []
+        };
     }
     
     

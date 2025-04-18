@@ -51,6 +51,15 @@ export default class App extends Component {
         });
     };
 
+
+    updateProductQuantity = (id, newQuantity) => {
+        this.setState(prevState => ({
+            MyState: prevState.MyState.map(product =>
+                product.id === id ? { ...product, quantity: newQuantity } : product
+            )
+        }));
+    }
+
     removeItemFromMyState = (itemId) => {
         this.setState(prevState => {
             // Находим индекс элемента в корзине
@@ -106,7 +115,8 @@ export default class App extends Component {
                 addToMyState: this.addToMyState,
                 removeFromMyState: this.removeFromMyState,
                 clearMyState: this.clearMyState,
-                removeItemFromMyState: this.removeItemFromMyState
+                removeItemFromMyState: this.removeItemFromMyState,
+                updateProductQuantity: this.updateProductQuantity
             })} />;
           })}
         </Routes>

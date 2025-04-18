@@ -11,6 +11,8 @@ export class Home extends Component {
             products: [],
             loading: true,
             error: null,
+            maxPrice: 1000,
+            selectedBrand: '',
             addedProductIds: []
         };
     }
@@ -63,8 +65,12 @@ export class Home extends Component {
         }
     }
 
+    
     render() {
         const { products, loading, error, addedProductIds } = this.state;
+
+        const maxAvailablePrice = Math.max(...products.map(p => p.price));
+
         console.log('Rendering with products:', this.state.products);
 
         if (loading) return <div className="p-3">Loading products...</div>;
@@ -72,7 +78,7 @@ export class Home extends Component {
 
         return (
             <div className="p-4">
-                <h1>Vending Machine Products</h1>
+                <h1>Газированные напитки</h1>
                 <NavLink
                     tag={Link}
                     className={`btn btn-primary ${this.props.MyState.length <= 0 ? 'disabled' : ''}`}
@@ -81,6 +87,32 @@ export class Home extends Component {
                 >
                     Добавлено: {this.props.MyState.length}
                 </NavLink>
+                <div style={{display: 'flex', gap: '20px', margin: '20px 0'}}>
+                    <div style={{marginBottom: '20px'}}>
+                        <label>Максимальная цена: {this.state.maxPrice} ₽</label><br/>
+                        <input
+                            type="range"
+                            min="0"
+                            max="1000"
+                            step="10"
+                            value={this.state.maxPrice}
+                            onChange={(e) => this.setState({maxPrice: Number(e.target.value)})}
+                        />
+                    </div>
+                    <div>
+                        <label>Бренд:</label><br/>
+                        <select
+                            value={this.state.selectedBrand}
+                            onChange={(e) => this.setState({selectedBrand: e.target.value})}
+                        >
+                            <option value="">Все бренды</option>
+                            {[...new Set(products.map(p => p.brand.name))].map(brand => (
+                                <option key={brand} value={brand}>{brand}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+
                 <div className="mt-3">
                     {products.length > 0 ? (
                         <div style={{
@@ -88,8 +120,17 @@ export class Home extends Component {
                             gridTemplateColumns: 'repeat(4, 1fr)',
                             gap: '20px'
                         }}>
-                            {products.map(product => {
-                                const isAdded = this.props.MyState.some(item => item.id === product.id);
+                            {products
+                                .filter(product => {
+                                    const priceMatch =
+                                        product.price <= this.state.maxPrice;
+                                    const brandMatch =
+                                        !this.state.selectedBrand || product.brand.name === this.state.selectedBrand;
+                                    return priceMatch && brandMatch;
+                                })
+                                .map(product => {
+
+                                    const isAdded = this.props.MyState.some(item => item.id === product.id);
 
 
                                 return (

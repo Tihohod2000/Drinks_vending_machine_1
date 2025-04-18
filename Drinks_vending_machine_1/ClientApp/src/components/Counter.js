@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import {Link} from "react-router-dom";
+import {NavLink} from "reactstrap";
 
 export class Counter extends Component {
   static displayName = Counter.name;
@@ -81,7 +83,7 @@ export class Counter extends Component {
                 <h2>Моя корзина</h2>
 
                 {MyState.length > 0 ? (
-                    <div style={{ margin: '10px' }}>
+                    <div>
                         {MyState.map(product => (
                             <div
                                 key={product.id}
@@ -90,14 +92,33 @@ export class Counter extends Component {
                                     borderRadius: '8px',
                                     padding: '15px',
                                     background: '#f9f9f9',
-                                    margin: '10px'
+                                    marginTop: '20px',
+                                    marginBottom: '10px'
                                 }}
                             >
                                 <h3>{product.info || 'Без названия'}</h3>
                                 <p>Бренд: {product.brand}</p>
                                 <p>Цена: {product.price} ₽</p>
-                                <p>Количество: {product.quantity}</p>
-                                <div style={{ display: 'flex', gap: '10px' }}>
+                                <label>
+                                    Количество:
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value={product.quantity}
+                                        onChange={(e) => {
+                                            const value = Math.max(1, Number(e.target.value));
+                                            this.props.updateProductQuantity(product.id, value);
+                                        }}
+                                        style={{
+                                            marginLeft: '10px',
+                                            width: '60px',
+                                            padding: '4px',
+                                            borderRadius: '4px',
+                                            border: '1px solid #ccc'
+                                        }}
+                                    />
+                                </label>
+                                <div style={{display: 'flex', gap: '10px', marginTop: '10px', marginBottom: '10px'}}>
                                     <button
                                         onClick={() => this.props.addToMyState(product)}
                                         style={{
@@ -149,17 +170,20 @@ export class Counter extends Component {
                                 border: 'none',
                                 borderRadius: '4px',
                                 cursor: 'pointer',
-                                marginTop: '20px'
+                                marginTop: '20px',
+                                marginBottom: '10px'
                             }}
                         >
                             Очистить корзину
                         </button>
-                        <div>
+                        <div style={{
+                            display: 'flex',
+                            gap: '10px',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                        }}>
                             <div>
-                                Общая сумма:
-                            </div>
-                            <div>
-                                {MyState.reduce((sum, item) => sum + item.price * item.quantity, 0)} ₽
+                                Общая сумма: {MyState.reduce((sum, item) => sum + item.price * item.quantity, 0)} ₽
                             </div>
                             <button
                                 // onClick={this.props.clearMyState}
@@ -169,6 +193,8 @@ export class Counter extends Component {
                                     color: 'white',
                                     border: 'none',
                                     borderRadius: '4px',
+                                    marginTop: '10px',
+                                    marginBottom: '10px',
                                     cursor: 'pointer'
                                 }}
                             >
@@ -177,9 +203,30 @@ export class Counter extends Component {
                         </div>
                     </div>
                 ) : (
-                    <p>Ваша корзина пуста</p>
-                )}
+                    <div>
+                        <p>Ваша корзина пуста</p>
+                    </div>
+
+                )
+                }
+                <div style={{
+                    padding: '10px',
+                }}>
+                    <NavLink
+                        tag={Link}
+                        className={`btn btn-primary`}
+                        to="/"
+                        style={{
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        Вернуться
+                    </NavLink>
+                </div>
+                
             </div>
+
         );
     }
 }

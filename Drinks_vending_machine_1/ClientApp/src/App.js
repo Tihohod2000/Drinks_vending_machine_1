@@ -18,6 +18,18 @@ export default class App extends Component {
             MyState: [...prevState.MyState, item]
         }));
     };
+    
+    removeFromMyState = (itemId) => {
+        this.setState(prevState => ({
+            MyState: prevState.MyState.filter(id => id !== itemId)
+        }));
+    };
+
+    clearMyState = () => {
+        this.setState({ MyState: [] });
+    };
+    
+    
   
   
   render() {
@@ -28,7 +40,9 @@ export default class App extends Component {
             const { element, ...rest } = route;
             return <Route key={index} {...rest} element={React.cloneElement(element, {
                 MyState: this.state.MyState,
-                addToMyState: this.addToMyState
+                addToMyState: this.addToMyState,
+                removeFromMyState: this.removeFromMyState,
+                clearMyState: this.clearMyState
             })} />;
           })}
         </Routes>

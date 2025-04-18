@@ -16,6 +16,7 @@ public class BasketController : ControllerBase
         _context = context;
     }
 
+    [ResponseCache(Duration = 30)]
     [HttpGet]
     public async Task<IActionResult> GetProducts()
     {
@@ -71,4 +72,47 @@ public class BasketController : ControllerBase
 
         return Ok(new { message = "Product added to basket" });
     }
+    
+    
+    [HttpPost("by-ids")]
+    public async Task<IActionResult> GetProductsByIds([FromBody] GetProductsByIdsRequest request)
+    {
+        if (request == null || request.Ids == null || !request.Ids.Any())
+        {
+            return BadRequest("Invalid request: IDs array is empty or null");
+        }
+
+        try
+        {
+            var products = await (
+                    from p in _context.Products
+                    where request.Ids.Contains(p.Id)
+                    join b in _context.Brands on p.BrandId equals b.Id into brandJoin
+                    from b in brandJoin.DefaultIfEmpty()  // LEFT JOIN
+                    select new 
+                    {
+                        Id = p.Id,
+                        Info = p.Info,
+                        Price = p.Price,
+                        Brand = b != null ? new 
+                        {
+                            Id = b.Id,
+                            Name = b.Name
+                        } : null
+                    })
+                .ToListAsync();
+
+            if (!products.Any())
+            {
+                return NotFound("No products found with the provided IDs");
+            }
+
+            return Ok(products);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+    
 }

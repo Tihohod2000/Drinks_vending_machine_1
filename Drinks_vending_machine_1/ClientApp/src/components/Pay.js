@@ -118,17 +118,6 @@ export class Pay extends Component {
                         canGive
                             ?   <div>
                                     <span style={{color: 'green'}}>Автомат может выдать сдачу</span>
-                                {canGive && (
-                                    <div style={{ marginTop: '20px' }}>
-                                        <Link
-                                            to="/test"
-                                            state={{ changeGiven }}
-                                            className="btn btn-success"
-                                        >
-                                            Перейти к выдаче сдачи
-                                        </Link>
-                                    </div>
-                                )}
                                 </div>
                             : <div>
                                 <span style={{color: 'red'}}>Автомат не может выдать сдачу</span>

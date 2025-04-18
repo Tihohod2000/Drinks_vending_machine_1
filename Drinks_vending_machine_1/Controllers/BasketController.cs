@@ -115,4 +115,32 @@ public class BasketController : ControllerBase
         }
     }
     
+    
+    [HttpGet("coin")]
+    public async Task<IActionResult> GetCoins()
+    {
+        try
+        {
+            var coins = await _context.Coins
+                .Select(c => new
+                {
+                    Id = c.Id,
+                    Info = c.CountCoint,      // Название или описание
+                    Price = c.Denomination    // Номинал монеты
+                })
+                .ToListAsync();
+
+            if (!coins.Any())
+            {
+                return NotFound("No coins found.");
+            }
+
+            return Ok(coins);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+    
 }

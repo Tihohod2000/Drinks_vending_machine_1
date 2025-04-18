@@ -69,7 +69,7 @@ export class Home extends Component {
     render() {
         const { products, loading, error, addedProductIds } = this.state;
 
-        const maxAvailablePrice = Math.max(...products.map(p => p.price));
+        // const maxAvailablePrice = Math.max(...products.map(p => p.price));
 
         console.log('Rendering with products:', this.state.products);
 

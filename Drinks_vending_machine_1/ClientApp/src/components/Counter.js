@@ -185,8 +185,24 @@ export class Counter extends Component {
                             <div>
                                 Общая сумма: {MyState.reduce((sum, item) => sum + item.price * item.quantity, 0)} ₽
                             </div>
-                            <button
-                                // onClick={this.props.clearMyState}
+                            {/*<button*/}
+                            {/*    // onClick={this.props.clearMyState}*/}
+                            {/*    style={{*/}
+                            {/*        padding: '8px 16px',*/}
+                            {/*        backgroundColor: '#4CAF50',*/}
+                            {/*        color: 'white',*/}
+                            {/*        border: 'none',*/}
+                            {/*        borderRadius: '4px',*/}
+                            {/*        marginTop: '10px',*/}
+                            {/*        marginBottom: '10px',*/}
+                            {/*        cursor: 'pointer'*/}
+                            {/*    }}*/}
+                            {/*>*/}
+                            {/*    Оплатить*/}
+                            {/*</button>*/}
+                            <NavLink
+                                tag={Link}
+                                to="/pay"
                                 style={{
                                     padding: '8px 16px',
                                     backgroundColor: '#4CAF50',
@@ -198,8 +214,8 @@ export class Counter extends Component {
                                     cursor: 'pointer'
                                 }}
                             >
-                                Оплатить
-                            </button>
+                                Перейти к оплате
+                            </NavLink>
                         </div>
                     </div>
                 ) : (

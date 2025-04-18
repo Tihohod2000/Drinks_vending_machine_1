@@ -16,7 +16,7 @@ export class Test extends Component {
     async componentDidMount() {
         try {
             const response = await fetch('http://localhost:8080/api/basket');
-            
+
             console.log(response);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);

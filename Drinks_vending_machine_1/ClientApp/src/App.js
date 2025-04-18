@@ -100,11 +100,46 @@ export default class App extends Component {
     clearMyState = () => {
         this.setState({ MyState: [] });
     };
+
+
+    // Рассчитываем общую сумму корзины
+    calculateTotalAmount = () => {
+        return this.state.MyState.reduce((sum, product) => sum + product.price * product.quantity, 0);
+    };
+
+
+    canGiveChange(change, products, coinInputValues) {
+        // Копируем и дополняем монеты внесенными пользователем
+        const coins = products.map(coin => {
+            const userAmount = parseInt(coinInputValues?.[coin.id] || 0, 10);
+            return {
+                ...coin,
+                count: coin.info + userAmount  // общая доступность монет
+            };
+        });
+
+        // Сортируем по убыванию номинала
+        coins.sort((a, b) => b.price - a.price);
+
+        let remaining = change;
+
+        for (const coin of coins) {
+            const needed = Math.floor(remaining / coin.price);
+            const used = Math.min(needed, coin.count);
+            remaining -= used * coin.price;
+
+            if (remaining === 0) break;
+        }
+
+        return remaining === 0;
+    }
     
     
   
   
   render() {
+      const totalAmount = this.calculateTotalAmount();
+      
     return (
       <Layout>
         <Routes>
@@ -112,11 +147,13 @@ export default class App extends Component {
             const { element, ...rest } = route;
             return <Route key={index} {...rest} element={React.cloneElement(element, {
                 MyState: this.state.MyState,
+                totalAmount,
                 addToMyState: this.addToMyState,
                 removeFromMyState: this.removeFromMyState,
                 clearMyState: this.clearMyState,
                 removeItemFromMyState: this.removeItemFromMyState,
-                updateProductQuantity: this.updateProductQuantity
+                updateProductQuantity: this.updateProductQuantity,
+                canGiveChange: this.canGiveChange
             })} />;
           })}
         </Routes>

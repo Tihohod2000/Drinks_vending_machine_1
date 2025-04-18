@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import {Link} from "react-router-dom";
-import {NavItem, NavLink} from "reactstrap";
+import { Link } from "react-router-dom";
+import { NavItem, NavLink } from "reactstrap";
 
 export class Pay extends Component {
     static displayName = Pay.name;
@@ -37,14 +37,20 @@ export class Pay extends Component {
         const change = totalAmount - price;
         return change > 0 ? change : 0;
     }
-    
-    
+
+    // Функция для вычисления сдачи и передачи через пропсы
+    handleChangeGiven = (change, canGive, changeGiven) => {
+        if (canGive) {
+            this.props.history.push({
+                pathname: "/test",
+                state: { changeGiven }  // передаем через state
+            });
+        }
+    };
 
     render() {
         const { products, loading, error, coinInputValues } = this.state;
         const { totalAmount } = this.props; // Получаем общую сумму из props
-        
-        
 
         if (loading) return <div className="p-3">Loading coins...</div>;
         if (error) return <div className="alert alert-danger">Error: {error.message}</div>;
@@ -61,9 +67,8 @@ export class Pay extends Component {
         return (
             <div className="p-4">
                 <h2>Монеты</h2>
-                <div> Итоговая сумма: {totalAmount} ₽
-                </div>
-                <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px'}}>
+                <div> Итоговая сумма: {totalAmount} ₽ </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
                     {products.map((coin) => (
                         <div
                             key={coin.id}
@@ -109,31 +114,35 @@ export class Pay extends Component {
                     marginBottom: '20px',
                     fontWeight: 'bold',
                     color: totalAmountUserHas < totalAmount ? 'red' : 'green' // Условный выбор цвета
-                }}
-                >
+                }}>
                     Вы внесли: {totalAmountUserHas} ₽
                 </div>
-                <div style={{marginTop: '10px', fontWeight: 'bold'}}>
+                <div style={{ marginTop: '10px', fontWeight: 'bold' }}>
                     {change > 0 && (
                         canGive
-                            ?   <div>
-                                    <span style={{color: 'green'}}>Автомат может выдать сдачу</span>
+                            ? <div>
+                                <span style={{ color: 'green' }}>Автомат может выдать сдачу</span>
                                 {canGive && (
-                                    <div style={{ marginTop: '20px' }}>
-                                        <Link
-                                            to="/test"
-                                            state={{ changeGiven }}
-                                            className="btn btn-success"
-                                        >
-                                            Перейти к выдаче сдачи
-                                        </Link>
-                                    </div>
+                                    <NavLink
+                                        tag={Link}
+                                        className="btn btn-primary"
+                                        to={{
+                                            pathname: "/test",
+                                            state: { changeGiven }  // передача состояния
+                                        }}
+                                        style={{
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        Оплатить
+                                    </NavLink>
                                 )}
-                                </div>
+                            </div>
                             : <div>
-                                <span style={{color: 'red'}}>Автомат не может выдать сдачу</span>
-                                </div>
-                                )}
+                                <span style={{ color: 'red' }}>Автомат не может выдать сдачу</span>
+                            </div>
+                    )}
                 </div>
                 <div>
                     Ваша сдача: {change}

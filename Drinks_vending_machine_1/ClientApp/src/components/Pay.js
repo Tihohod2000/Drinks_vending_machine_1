@@ -12,7 +12,7 @@ export class Pay extends Component {
             loading: true,
             error: null,
             coinInputValues: {},
-            availableCoins: [],
+            availableCoins: []
         };
     }
 
@@ -35,7 +35,7 @@ export class Pay extends Component {
     // Функция для подсчета сдачи
     calculateChange(totalAmount, price) {
         const change = totalAmount - price;
-        return change > 0 ? change : 0;
+        return change >= 0 ? change : -1;
     }
 
     // Функция для вычисления сдачи и передачи через пропсы
@@ -123,20 +123,25 @@ export class Pay extends Component {
                             ? <div>
                                 <span style={{ color: 'green' }}>Автомат может выдать сдачу</span>
                                 {canGive && (
-                                    <NavLink
-                                        tag={Link}
-                                        className="btn btn-primary"
-                                        to={{
-                                            pathname: "/test",
-                                            state: { changeGiven }  // передача состояния
-                                        }}
-                                        style={{
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                        }}
-                                    >
-                                        Оплатить
-                                    </NavLink>
+                                    <div>
+                                        <NavLink
+                                            tag={Link}
+                                            className="btn btn-primary"
+                                            to={{
+                                                pathname: "/test",
+                                                state: {changeGiven}  // передача состояния
+                                            }}
+                                            style={{
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                            }}
+                                        >
+                                            Оплатить
+                                        </NavLink>
+                                        <div>
+                                            Ваша сдача: {change}
+                                        </div>
+                                    </div>
                                 )}
                             </div>
                             : <div>
@@ -144,9 +149,9 @@ export class Pay extends Component {
                             </div>
                     )}
                 </div>
-                <div>
-                    Ваша сдача: {change}
-                </div>
+                {/*<div>*/}
+                {/*    Ваша сдача: {change}*/}
+                {/*</div>*/}
             </div>
         );
     }

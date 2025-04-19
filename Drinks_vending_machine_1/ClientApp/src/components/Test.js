@@ -14,9 +14,10 @@ export class Test extends Component {
 
     render() {
         const { changeGiven } = this.props; // Получаем changeGiven через props
-        
-        
-        console.log(this.props);
+
+
+        console.log(changeGiven);
+        console.log("JOOPAA");
 
         return (
             <div className="p-4">

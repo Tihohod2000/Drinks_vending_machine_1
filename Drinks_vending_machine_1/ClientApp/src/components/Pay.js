@@ -12,7 +12,7 @@ export class Pay extends Component {
             loading: true,
             error: null,
             coinInputValues: {},
-            availableCoins: []
+            availableCoins: [],
         };
     }
 
@@ -118,7 +118,7 @@ export class Pay extends Component {
                     Вы внесли: {totalAmountUserHas} ₽
                 </div>
                 <div style={{ marginTop: '10px', fontWeight: 'bold' }}>
-                    {change > 0 && (
+                    {change >= 0 && (
                         canGive
                             ? <div>
                                 <span style={{ color: 'green' }}>Автомат может выдать сдачу</span>

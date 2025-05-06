@@ -9,9 +9,17 @@ export default class App extends Component {
 
 
     state = {
-        MyState: []  // Теперь это часть состояния React
+        MyState: [], // Теперь это часть состояния React
+        otherProps: {},
     };
 
+    addOtherProps = async (props) => {
+        const otherProps = {};
+        for (const [k,v] of Object.entries(props)) {
+            otherProps[k] = v;
+        }
+        await this.setState({ otherProps });
+    }
     // Метод для обновления состояния
     // Добавление товара в корзину
     addToMyState = (product) => {
@@ -20,10 +28,7 @@ export default class App extends Component {
             const existingItemIndex = prevState.MyState.findIndex(
                 item => item.id === product.id
             );
-
-            console.log("11");
-            console.log(this.state);
-            console.log("11");
+            
             if (existingItemIndex >= 0) {
                 // Если товар уже есть - увеличиваем количество
                 const updatedItems = [...prevState.MyState];
@@ -164,7 +169,9 @@ export default class App extends Component {
                 clearMyState: this.clearMyState,
                 removeItemFromMyState: this.removeItemFromMyState,
                 updateProductQuantity: this.updateProductQuantity,
-                canGiveChange: this.canGiveChange
+                canGiveChange: this.canGiveChange,
+                otherProps: this.state.otherProps,
+                addOtherProps: this.addOtherProps,
             })} />;
           })}
         </Routes>

@@ -5,34 +5,32 @@ export class Test extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            myStateProducts: [],
-            isLoading: false,
-            error: null
-        };
+
+        console.log('props', this.props);
     }
 
     render() {
-        const { changeGiven } = this.props; // Получаем changeGiven через props
+        const { otherProps: { changeGiven } } = this.props; // Получаем changeGiven через props
 
 
-        console.log(changeGiven);
-        console.log("JOOPAA");
+        // console.log(changeGiven);
+        console.log(this.props);
+        console.log(changeGiven.length);
 
         return (
             <div className="p-4">
                 <h2>Выданная сдача</h2>
-                {/*{changeGiven.length > 0 ? (*/}
-                {/*    <ul>*/}
-                {/*        {changeGiven.map((coin, index) => (*/}
-                {/*            <li key={index}>*/}
-                {/*                {coin.count} шт по {coin.price} ₽*/}
-                {/*            </li>*/}
-                {/*        ))}*/}
-                {/*    </ul>*/}
-                {/*) : (*/}
-                {/*    <div>Сдача не выдана</div>*/}
-                {/*)}*/}
+                {changeGiven.length > 0 ? (
+                    <ul>
+                        {changeGiven.map((coin, index) => (
+                            <li key={index}>
+                                {coin.count} шт по {coin.price} ₽
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <div>Сдача не выдана</div>
+                )}
             </div>
         );
     }

@@ -12,7 +12,8 @@ export class Pay extends Component {
             loading: true,
             error: null,
             coinInputValues: {},
-            availableCoins: []
+            availableCoins: [],
+            OtherProps: {},
         };
     }
 
@@ -39,13 +40,18 @@ export class Pay extends Component {
     }
 
     // Функция для вычисления сдачи и передачи через пропсы
-    handleChangeGiven = (change, canGive, changeGiven) => {
-        if (canGive) {
-            this.props.history.push({
-                pathname: "/test",
-                state: { changeGiven }  // передаем через state
-            });
-        }
+    handleChangeGiven = async () => {
+        const { products, loading, error, coinInputValues } = this.state;
+        const { totalAmount } = this.props;
+        const totalAmountUserHas = products.reduce((sum, coin) => {
+            const quantity = parseInt(coinInputValues?.[coin.id] || 0, 10);
+            return sum + coin.price * quantity;
+        }, 0);
+        const change = this.calculateChange(totalAmountUserHas, totalAmount);
+        const { changeGiven } = this.props.canGiveChange(change, products, coinInputValues);
+        await this.props.addOtherProps({ changeGiven });
+        this.props.clearMyState();
+
     };
 
     render() {
@@ -59,13 +65,15 @@ export class Pay extends Component {
             const quantity = parseInt(coinInputValues?.[coin.id] || 0, 10);
             return sum + coin.price * quantity;
         }, 0);
-
         const change = this.calculateChange(totalAmountUserHas, totalAmount);
 
-        const { canGive, changeGiven } = this.props.canGiveChange(change, products, coinInputValues);
+        const { canGive } = this.props.canGiveChange(change, products, coinInputValues);
 
         return (
             <div className="p-4">
+                <div>
+                    Сейчас в state {console.log(this.state)}
+                </div>
                 <h2>Монеты</h2>
                 <div> Итоговая сумма: {totalAmount} ₽ </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
@@ -129,12 +137,13 @@ export class Pay extends Component {
                                             className="btn btn-primary"
                                             to={{
                                                 pathname: "/test",
-                                                state: {changeGiven}  // передача состояния
+                                                state: { ...this.state } // передача состояния
                                             }}
                                             style={{
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
                                             }}
+                                            onClick={this.handleChangeGiven}
                                         >
                                             Оплатить
                                         </NavLink>
